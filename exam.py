@@ -7,6 +7,8 @@ from qiskit import execute,QuantumCircuit, QuantumRegister, ClassicalRegister, A
 from qiskit_ibm_provider import IBMProvider
 from qiskit.tools.jupyter import *
 from qiskit.visualization import *
+from qiskit.quantum_info import Operator, average_gate_fidelity, process_fidelity, state_fidelity
+from qiskit.circuit.library import XGate
 
 # # Loading your IBM Quantum account(s)
 # provider = IBMProvider()
@@ -110,12 +112,56 @@ from qiskit.visualization import *
 # print(qc.depth())
 
 # Which code snippet would execute a circuit given these parameters?
-qc = QuantumCircuit(3, 3)
-qc.h(0)
-qasm_sim = Aer.get_backend('qasm_simulator')  
-couple_map = [[0, 1], [1, 2]]
-job = execute(qc, backend=qasm_sim, shots=1024, coupling_map=couple_map)
+# qc = QuantumCircuit(3, 3)
+# qc.h([0,2])
+# qc.cx(0,1)
+# qc.s(1)
+# qc.barrier()
+# qc.measure([0,1,2],[0,1,2])
 
-result_sim = job.result()
-counts = result_sim.get_counts(qc)
+# qasm_sim = Aer.get_backend('qasm_simulator')  
+# couple_map = [[0, 1], [1, 2]]
+# job = execute(qc, backend=qasm_sim, shots=1024, coupling_map=couple_map)
+
+# result_sim = job.result()
+# counts = result_sim.get_counts(qc)
+# plot_histogram(counts)
+# plt.show()
+
+# Which of these would execute a circuit on a set of qubits which are coupled in a custom way?
+
+# A.execute(qc, backend, shots=1024, coupling_map=[[0,1], [1,2]]) 
+
+# the cloupling map is used for list of pars qbits in the processor that are physically linked
+
+# Which three simulators are available in BasicAer?
+
+# QasmSimulatorPy / StatevectorSimulatorPy / UnitarySimulatorPy
+
+#  Which line of code would assign a statevector simulator object to the variable backend?
+
+# backend = BasicAer.get_backend('statevector_simulator')
+
+#  Which code fragment would yield an operator that represents a single-qubit X gate?
+
+# qc = QuantumCircuit(1)
+# qc.x(0)
+# op = Operator(qc)
+
+# What would be the fidelity result(s) for these two operators, which differ only by global phase?
+
+# op_a = Operator(XGate())
+# op_b = np.exp(1j * 0.5) * Operator(XGate())
+
+# print(average_gate_fidelity(op_a, op_b))
+# print(process_fidelity(op_a, op_b))
+
+# Given this code fragment, which output fits most closely with the measurement probability distribution?
+
+qc = QuantumCircuit(2, 2)
+qc.x(0)
+qc.measure([0,1], [0,1])
+simulator = Aer.get_backend('qasm_simulator')
+result = execute(qc, simulator, shots=1000).result()
+counts  = result.get_counts(qc)
 print(counts)
