@@ -1,11 +1,22 @@
-import numpy as np
 from qiskit import QuantumCircuit, BasicAer, execute, Aer
 from qiskit.visualization import plot_bloch_multivector
 import matplotlib.pyplot as plt
 
+def quantum_coin_flipping():
+    qc = QuantumCircuit(1,1)
+    qc.h(0)
+    qc.measure(0,0)
+
+    backend = BasicAer.get_backend('qasm_simulator')
+    job = execute(qc, backend, shots=1).result()
+    count = job.data(qc)
+    if count['counts'].get('0x0') == True:
+        return True
+    else:
+        return False
 
 qc = QuantumCircuit(1)                              # build a circuit with the one qubit
-if np.random.rand() >= 0.5:                         # if the random number is greater than 0.5, append the hadamard gate in the circuit
+if quantum_coin_flipping():                         # if the random number is greater than 0.5, append the hadamard gate in the circuit
     qc.h(0)                                         # build a |+> 
 
 else:                                               # if the random number is not greater than 0.5
